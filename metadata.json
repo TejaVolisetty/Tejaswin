@@ -1,0 +1,6 @@
+{
+  "name": "Teja Swin Volisetty Portfolio",
+  "description": "Japanese anime-inspired interactive personal portfolio for Teja Swin Volisetty with Home, About, Skills, Projects, Experience, Certifications, and Contact views.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
