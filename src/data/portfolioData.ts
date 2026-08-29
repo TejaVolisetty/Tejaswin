@@ -1,5 +1,13 @@
 import { Project, Certification, ExperienceItem, TimelineMilestone, SkillItem, ProficiencyItem, ToolItem } from '../types';
 
+import heroBoyDock from "../assets/images/72579bcd-b15b-4487-8152-b0de680cf3bd.png";
+import aboutDesk from "../assets/images/3ab1fa2e-f740-4152-b888-0d844e731b5b.png";
+import toriiSunset from "../assets/images/torii_sunset_anime_1787215212077.jpg";
+import faceRecog from "../assets/images/image.png";
+import parkVision from "../assets/images/proj_parkvision_1787215264863.jpg";
+import foodWise from "../assets/images/proj_foodwise_1787215281276.jpg";
+import gradeSys from "../assets/images/proj_grade_sys_1787215298194.jpg";
+
 export const PERSONAL_INFO = {
   name: "Teja Swin Volisetty",
   shortName: "Teja Swin",
@@ -20,13 +28,13 @@ export const PERSONAL_INFO = {
 
 // Generated backdrop images
 export const IMAGES = {
-  heroBoyDock: "/src/assets/images/72579bcd-b15b-4487-8152-b0de680cf3bd.png",
-  aboutDesk: "/src/assets/images/3ab1fa2e-f740-4152-b888-0d844e731b5b.png",
-  toriiSunset: "/src/assets/images/torii_sunset_anime_1787215212077.jpg",
-  faceRecog: "/src/assets/images/image.png",
-  parkVision: "/src/assets/images/proj_parkvision_1787215264863.jpg",
-  foodWise: "/src/assets/images/proj_foodwise_1787215281276.jpg",
-  gradeSys: "/src/assets/images/proj_grade_sys_1787215298194.jpg",
+  heroBoyDock,
+  aboutDesk,
+  toriiSunset,
+  faceRecog,
+  parkVision,
+  foodWise,
+  gradeSys,
 };
 
 export const TECHNICAL_SKILLS: SkillItem[] = [
