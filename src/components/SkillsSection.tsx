@@ -91,9 +91,6 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ onNavigate }) => {
               <div className="font-serif-jp text-rose-400 font-bold text-sm tracking-widest">
                 学びは、終わりのない旅
               </div>
-              <span className="w-4 h-4 rounded bg-rose-600/80 text-white font-serif-jp text-[10px] flex items-center justify-center font-bold">
-                夢
-              </span>
             </div>
 
             {/* Eyebrow */}

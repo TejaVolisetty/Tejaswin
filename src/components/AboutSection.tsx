@@ -55,9 +55,6 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onNavigate }) => {
               <div className="text-[11px] text-neutral-300 tracking-wider uppercase font-mono">
                 Discipline Creates Freedom
               </div>
-              <span className="w-4 h-4 rounded bg-rose-600/80 text-white font-serif-jp text-[10px] flex items-center justify-center font-bold">
-                夢
-              </span>
             </div>
 
             {/* Eyebrow */}

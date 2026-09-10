@@ -28,7 +28,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   return (
     <header className="fixed top-0 left-0 right-0 z-40 px-4 sm:px-8 py-3.5 flex items-center justify-between bg-gradient-to-b from-black/80 via-black/40 to-transparent backdrop-blur-[2px]">
-      {/* Brand Logo with Japanese Seal */}
+      {/* Brand Logo */}
       <div
         id="navbar-logo-button"
         onClick={() => onNavigate('home')}
@@ -36,9 +36,6 @@ export const Navbar: React.FC<NavbarProps> = ({
       >
         <span className="font-script text-3xl sm:text-4xl text-white tracking-wide transition-transform group-hover:scale-105">
           Teja
-        </span>
-        <span className="w-6 h-6 rounded bg-rose-600/90 text-white font-serif-jp text-xs flex items-center justify-center shadow-[0_0_12px_rgba(225,29,72,0.6)] font-bold">
-          夢
         </span>
       </div>
 
