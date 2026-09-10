@@ -46,12 +46,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onNavigate }) => {
           {/* Left Column: Heading, Calligraphy Scroll & Story Intro */}
           <div className="lg:col-span-5 flex flex-col items-start gap-5">
             
-            {/* Japanese Hanging Scroll Motif */}
-            <div className="hidden sm:flex items-center gap-4 bg-black/40 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10">
-              <div className="font-serif-jp text-rose-400 font-bold text-sm tracking-widest">
-                継続は力なり
-              </div>
-              <div className="w-[1px] h-4 bg-white/20" />
+            {/* Philosophy Badge */}
+            <div className="hidden sm:flex items-center gap-2 bg-black/40 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10">
               <div className="text-[11px] text-neutral-300 tracking-wider uppercase font-mono">
                 Discipline Creates Freedom
               </div>

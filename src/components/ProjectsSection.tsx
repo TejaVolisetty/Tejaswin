@@ -171,8 +171,8 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ onNavigate }) 
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Capstone Project</span>
               </div>
-              <span className="font-serif-jp text-rose-300/80 text-xs tracking-widest writing-vertical">
-                より良い未来へ
+              <span className="text-[10px] font-mono text-rose-300/80 uppercase tracking-wider">
+                Featured
               </span>
             </div>
 

@@ -187,15 +187,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onNavigate }) =>
               </div>
             </div>
 
-            {/* Japanese Signoff Card */}
+            {/* Signoff Card */}
             <div className="p-3 rounded-2xl bg-black/40 border border-white/10 flex items-center justify-between mt-2">
-              <div className="flex items-center gap-2">
-                <span className="font-serif-jp text-rose-400 text-xs font-bold">未来へ</span>
-                <span className="text-neutral-500 text-xs">|</span>
-                <span className="font-serif-jp text-neutral-300 text-xs">また、どこかで</span>
-              </div>
-              <span className="text-[9px] font-mono text-neutral-500 uppercase">
-                UNTIL WE MEET AGAIN
+              <span className="text-xs font-medium text-rose-400">Let's Create Together</span>
+              <span className="text-[9px] font-mono text-neutral-400 uppercase tracking-wider">
+                Open to Opportunities
               </span>
             </div>
           </div>

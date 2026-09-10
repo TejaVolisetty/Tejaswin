@@ -86,11 +86,11 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ onNavigate }) => {
           {/* Left Column: Heading, Calligraphy & Quote */}
           <div className="lg:col-span-4 flex flex-col items-start gap-4">
             
-            {/* Japanese Hanging Scroll */}
-            <div className="hidden sm:flex items-center gap-4 bg-black/40 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10">
-              <div className="font-serif-jp text-rose-400 font-bold text-sm tracking-widest">
-                学びは、終わりのない旅
-              </div>
+            {/* Growth Badge */}
+            <div className="hidden sm:flex items-center gap-2 bg-black/40 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10">
+              <span className="text-[11px] text-neutral-300 tracking-wider uppercase font-mono">
+                Continuous Learning & Innovation
+              </span>
             </div>
 
             {/* Eyebrow */}
@@ -257,11 +257,11 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ onNavigate }) => {
             {/* Next Chapter Brush Button */}
             <div className="mt-3 pt-2 border-t border-white/5 flex justify-end">
               <button
-                id="skills-next-dream-cta"
+                id="skills-action-button"
                 onClick={() => onNavigate('projects')}
                 className="px-4 py-1.5 rounded-full text-xs font-medium text-white bg-rose-600 hover:bg-rose-700 shadow-[0_0_15px_rgba(225,29,72,0.5)] flex items-center gap-2 transition-all"
               >
-                <span className="font-serif-jp">次の夢へ</span>
+                <span>Explore Projects</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
