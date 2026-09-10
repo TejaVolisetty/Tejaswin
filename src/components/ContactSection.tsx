@@ -18,6 +18,9 @@ import {
   CheckCircle2,
   Globe,
   ArrowRight,
+  Copy,
+  Check,
+  ExternalLink,
 } from 'lucide-react';
 
 interface ContactSectionProps {
@@ -34,26 +37,66 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onNavigate }) =>
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'success' | 'client_fallback'>('success');
+  const [copied, setCopied] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const mailSubject = `Portfolio Message: ${formData.subject} - from ${formData.name || 'Visitor'}`;
+  const mailBody = `Hi Teja Swin,\n\n${formData.message}\n\n---\nSender: ${formData.name}\nEmail: ${formData.email}\nTopic: ${formData.subject}`;
+  const mailtoUrl = `mailto:${PERSONAL_INFO.email}?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`;
+  const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(PERSONAL_INFO.email)}&su=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`;
+
+  const handleCopyMessage = () => {
+    const text = `To: ${PERSONAL_INFO.email}\nSubject: ${mailSubject}\n\n${mailBody}`;
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 3000);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) return;
 
     setIsSending(true);
-    setTimeout(() => {
+
+    try {
+      const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(PERSONAL_INFO.email)}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          _subject: mailSubject,
+          subject: formData.subject,
+          message: formData.message,
+          _replyto: formData.email,
+          _template: 'table',
+        }),
+      });
+
+      if (res.ok) {
+        setSubmitStatus('success');
+      } else {
+        setSubmitStatus('client_fallback');
+      }
+    } catch {
+      setSubmitStatus('client_fallback');
+    } finally {
       setIsSending(false);
       setIsSubmitted(true);
-      // reset after 4s
-      setTimeout(() => {
-        setIsSubmitted(false);
-        setFormData({
-          name: '',
-          email: '',
-          subject: "Let's Work Together",
-          message: '',
-        });
-      }, 4000);
-    }, 900);
+    }
+  };
+
+  const handleResetForm = () => {
+    setIsSubmitted(false);
+    setFormData({
+      name: '',
+      email: '',
+      subject: "Let's Work Together",
+      message: '',
+    });
   };
 
   return (
@@ -169,14 +212,69 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onNavigate }) =>
               </div>
 
               {isSubmitted ? (
-                <div className="py-8 flex flex-col items-center justify-center text-center gap-3 animate-fade-in">
-                  <div className="w-12 h-12 rounded-full bg-emerald-950/60 border border-emerald-500/50 flex items-center justify-center text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.4)]">
+                <div className="py-6 px-2 flex flex-col items-center justify-center text-center gap-3 animate-fade-in">
+                  <div className="w-12 h-12 rounded-full bg-emerald-950/70 border border-emerald-500/50 flex items-center justify-center text-emerald-400 shadow-[0_0_25px_rgba(16,185,129,0.4)]">
                     <CheckCircle2 className="w-6 h-6" />
                   </div>
-                  <h4 className="text-base font-bold text-white font-display">Message Received!</h4>
-                  <p className="text-xs text-neutral-300 max-w-xs">
-                    Thank you for reaching out, {formData.name || 'friend'}! I will respond to your email within 24 hours.
-                  </p>
+                  <div>
+                    <h4 className="text-base font-bold text-white font-display">
+                      {submitStatus === 'success' ? 'Message Dispatched!' : 'Message Ready to Send!'}
+                    </h4>
+                    <p className="text-xs text-neutral-300 max-w-sm mt-1 leading-relaxed">
+                      Thank you for reaching out, <span className="text-rose-400 font-semibold">{formData.name || 'friend'}</span>! Your message has been prepared for{' '}
+                      <span className="text-white font-mono">{PERSONAL_INFO.email}</span>.
+                    </p>
+                  </div>
+
+                  {/* Direct 1-Click Send / Backup Actions */}
+                  <div className="w-full max-w-sm bg-black/50 border border-white/10 rounded-xl p-3 flex flex-col gap-2 mt-2">
+                    <span className="text-[10px] uppercase font-mono tracking-wider text-neutral-400 text-left">
+                      Direct Email Options
+                    </span>
+                    <div className="grid grid-cols-2 gap-2">
+                      <a
+                        href={gmailComposeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-2 rounded-lg bg-rose-950/50 hover:bg-rose-900/70 border border-rose-500/40 text-rose-200 text-xs font-medium flex items-center justify-center gap-1.5 transition-all shadow-[0_0_12px_rgba(225,29,72,0.25)]"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                        <span>Open in Gmail</span>
+                      </a>
+                      <a
+                        href={mailtoUrl}
+                        className="px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-medium flex items-center justify-center gap-1.5 transition-all"
+                      >
+                        <Mail className="w-3.5 h-3.5" />
+                        <span>Mail App</span>
+                      </a>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleCopyMessage}
+                      className="w-full py-1.5 rounded-lg bg-black/60 hover:bg-black/90 border border-white/10 text-neutral-300 hover:text-white text-[11px] flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                    >
+                      {copied ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-emerald-400" />
+                          <span className="text-emerald-400 font-medium">Copied to Clipboard!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3.5 h-3.5" />
+                          <span>Copy Message Details</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleResetForm}
+                    className="text-xs text-neutral-400 hover:text-white underline underline-offset-4 cursor-pointer mt-1"
+                  >
+                    Send another message
+                  </button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-3">
@@ -256,59 +354,100 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onNavigate }) =>
                       </>
                     )}
                   </button>
+
+                  {/* Direct mail alternative strip */}
+                  <div className="pt-2 border-t border-white/5 flex flex-wrap items-center justify-between gap-2 text-[11px] text-neutral-400">
+                    <span className="flex items-center gap-1 text-[10px]">
+                      <Sparkles className="w-3 h-3 text-rose-400" /> Direct email:
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <a
+                        href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(PERSONAL_INFO.email)}&su=${encodeURIComponent("Collaboration Inquiry - Teja Swin Volisetty")}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-rose-500/20 hover:text-rose-300 border border-white/10 hover:border-rose-500/30 transition-all flex items-center gap-1 text-[10px]"
+                      >
+                        <Mail className="w-3 h-3 text-rose-400" />
+                        <span>Gmail Web</span>
+                        <ExternalLink className="w-2.5 h-2.5 opacity-60" />
+                      </a>
+                      <a
+                        href={`mailto:${PERSONAL_INFO.email}`}
+                        className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 hover:text-white border border-white/10 transition-all text-[10px]"
+                      >
+                        <span>Mail App</span>
+                      </a>
+                    </div>
+                  </div>
                 </form>
               )}
             </div>
 
             {/* Social Connect Circles */}
-            <div className="glass-panel p-3 rounded-2xl flex items-center justify-between">
-              <span className="text-xs font-bold text-white font-display">Connect With Me</span>
-              <div className="flex items-center gap-2">
+            <div className="glass-panel p-3.5 rounded-2xl flex items-center justify-between">
+              <div className="flex flex-col">
+                <span className="text-xs font-bold text-white font-display">Connect With Me</span>
+                <span className="text-[10px] text-neutral-400">Verified links & direct contact</span>
+              </div>
+              <div className="flex items-center gap-2.5">
                 <a
                   href={PERSONAL_INFO.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-7 h-7 rounded-full bg-black/60 border border-white/10 hover:border-sky-400/50 flex items-center justify-center text-neutral-300 hover:text-sky-400 transition-colors"
-                  title="LinkedIn"
+                  className="w-8 h-8 rounded-full bg-black/60 border border-white/10 hover:border-sky-400/70 hover:text-sky-400 hover:bg-sky-950/40 flex items-center justify-center text-neutral-300 transition-all shadow-sm hover:shadow-[0_0_12px_rgba(56,189,248,0.4)]"
+                  title="VOLISETTY TEJASWIN | LinkedIn"
                 >
-                  <Linkedin className="w-3.5 h-3.5" />
+                  <Linkedin className="w-4 h-4" />
                 </a>
                 <a
                   href={PERSONAL_INFO.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-7 h-7 rounded-full bg-black/60 border border-white/10 hover:border-white/50 flex items-center justify-center text-neutral-300 hover:text-white transition-colors"
-                  title="GitHub"
+                  className="w-8 h-8 rounded-full bg-black/60 border border-white/10 hover:border-white/70 hover:text-white hover:bg-neutral-800 flex items-center justify-center text-neutral-300 transition-all shadow-sm hover:shadow-[0_0_12px_rgba(255,255,255,0.3)]"
+                  title="TejaVolisetty (TEJASWIN) | GitHub"
                 >
-                  <Github className="w-3.5 h-3.5" />
+                  <Github className="w-4 h-4" />
                 </a>
                 <a
-                  href={PERSONAL_INFO.xTwitter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-7 h-7 rounded-full bg-black/60 border border-white/10 hover:border-white/50 flex items-center justify-center text-neutral-300 hover:text-white transition-colors"
-                  title="X (Twitter)"
+                  href={`mailto:${PERSONAL_INFO.email}`}
+                  className="w-8 h-8 rounded-full bg-black/60 border border-white/10 hover:border-rose-400/70 hover:text-rose-400 hover:bg-rose-950/40 flex items-center justify-center text-neutral-300 transition-all shadow-sm hover:shadow-[0_0_12px_rgba(244,63,94,0.4)]"
+                  title={`Email: ${PERSONAL_INFO.email}`}
                 >
-                  <Twitter className="w-3.5 h-3.5" />
+                  <Mail className="w-4 h-4" />
                 </a>
-                <a
-                  href={PERSONAL_INFO.youtube}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-7 h-7 rounded-full bg-black/60 border border-white/10 hover:border-red-500/50 flex items-center justify-center text-neutral-300 hover:text-red-500 transition-colors"
-                  title="YouTube"
-                >
-                  <Youtube className="w-3.5 h-3.5" />
-                </a>
-                <a
-                  href={PERSONAL_INFO.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-7 h-7 rounded-full bg-black/60 border border-white/10 hover:border-rose-400/50 flex items-center justify-center text-neutral-300 hover:text-rose-400 transition-colors"
-                  title="Instagram"
-                >
-                  <Instagram className="w-3.5 h-3.5" />
-                </a>
+                {PERSONAL_INFO.xTwitter && (
+                  <a
+                    href={PERSONAL_INFO.xTwitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-full bg-black/60 border border-white/10 hover:border-white/70 hover:text-white flex items-center justify-center text-neutral-300 transition-all"
+                    title="X (Twitter)"
+                  >
+                    <Twitter className="w-4 h-4" />
+                  </a>
+                )}
+                {PERSONAL_INFO.youtube && (
+                  <a
+                    href={PERSONAL_INFO.youtube}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-full bg-black/60 border border-white/10 hover:border-red-500/70 hover:text-red-500 flex items-center justify-center text-neutral-300 transition-all"
+                    title="YouTube"
+                  >
+                    <Youtube className="w-4 h-4" />
+                  </a>
+                )}
+                {PERSONAL_INFO.instagram && (
+                  <a
+                    href={PERSONAL_INFO.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-full bg-black/60 border border-white/10 hover:border-rose-400/70 hover:text-rose-400 flex items-center justify-center text-neutral-300 transition-all"
+                    title="Instagram"
+                  >
+                    <Instagram className="w-4 h-4" />
+                  </a>
+                )}
               </div>
             </div>
           </div>

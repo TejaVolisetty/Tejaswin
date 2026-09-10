@@ -1,105 +1,102 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Volume2, VolumeX, Sparkles } from 'lucide-react';
+import snowfallAudio from '../assets/audio/snowfall.mp3';
 
 export const AudioZenPlayer: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioCtxRef = useRef<AudioContext | null>(null);
-  const intervalRef = useRef<number | null>(null);
-  const masterGainRef = useRef<GainNode | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const fadeIntervalRef = useRef<number | null>(null);
 
-  const initAudio = () => {
-    try {
-      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      const ctx = new AudioCtx();
-      audioCtxRef.current = ctx;
-
-      const masterGain = ctx.createGain();
-      masterGain.gain.setValueAtTime(0.15, ctx.currentTime);
-      masterGain.connect(ctx.destination);
-      masterGainRef.current = masterGain;
-
-      return ctx;
-    } catch {
-      return null;
-    }
-  };
-
-  const playPentatonicNote = (freq: number, duration = 3) => {
-    if (!audioCtxRef.current || !masterGainRef.current) return;
-    const ctx = audioCtxRef.current;
-
-    const osc = ctx.createOscillator();
-    const noteGain = ctx.createGain();
-
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(freq, ctx.currentTime);
-
-    // Koto / bamboo bell envelope
-    noteGain.gain.setValueAtTime(0.001, ctx.currentTime);
-    noteGain.gain.exponentialRampToValueAtTime(0.3, ctx.currentTime + 0.08);
-    noteGain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
-
-    osc.connect(noteGain);
-    noteGain.connect(masterGainRef.current);
-
-    osc.start();
-    osc.stop(ctx.currentTime + duration);
-  };
-
-  const toggleSound = () => {
-    if (isPlaying) {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      if (audioCtxRef.current && audioCtxRef.current.state === 'running') {
-        audioCtxRef.current.suspend();
-      }
-      setIsPlaying(false);
-    } else {
-      let ctx = audioCtxRef.current;
-      if (!ctx) {
-        ctx = initAudio();
-      }
-      if (ctx && ctx.state === 'suspended') {
-        ctx.resume();
-      }
-
-      // Traditional Insen / Yo scale frequencies: D, Eb, G, A, C
-      const scale = [293.66, 311.13, 392.00, 440.00, 523.25, 587.33, 622.25, 783.99];
-
-      playPentatonicNote(scale[0], 4);
-      setTimeout(() => playPentatonicNote(scale[2], 3.5), 800);
-
-      // Play soft occasional chimes
-      intervalRef.current = window.setInterval(() => {
-        const randomNote = scale[Math.floor(Math.random() * scale.length)];
-        playPentatonicNote(randomNote, Math.random() * 2 + 2.5);
-      }, 2400);
-
-      setIsPlaying(true);
-    }
-  };
+  // Target ambient volume (soft and comfortable)
+  const TARGET_VOLUME = 0.35;
 
   useEffect(() => {
+    const audio = new Audio(snowfallAudio);
+    audio.loop = true;
+    audio.preload = 'metadata';
+    audio.volume = TARGET_VOLUME;
+    audioRef.current = audio;
+
+    const handleCanPlay = () => setIsLoaded(true);
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
+
+    audio.addEventListener('canplaythrough', handleCanPlay);
+    audio.addEventListener('play', handlePlay);
+    audio.addEventListener('pause', handlePause);
+
     return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      if (audioCtxRef.current) {
-        audioCtxRef.current.close().catch(() => {});
-      }
+      if (fadeIntervalRef.current) clearInterval(fadeIntervalRef.current);
+      audio.removeEventListener('canplaythrough', handleCanPlay);
+      audio.removeEventListener('play', handlePlay);
+      audio.removeEventListener('pause', handlePause);
+      audio.pause();
+      audio.src = '';
     };
   }, []);
+
+  const toggleSound = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (isPlaying) {
+      // Smooth fade out
+      if (fadeIntervalRef.current) clearInterval(fadeIntervalRef.current);
+      let vol = audio.volume;
+      fadeIntervalRef.current = window.setInterval(() => {
+        vol = Math.max(0, vol - 0.05);
+        audio.volume = vol;
+        if (vol <= 0) {
+          if (fadeIntervalRef.current) clearInterval(fadeIntervalRef.current);
+          audio.pause();
+          setIsPlaying(false);
+        }
+      }, 40);
+    } else {
+      if (fadeIntervalRef.current) clearInterval(fadeIntervalRef.current);
+      audio.volume = 0;
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsPlaying(true);
+            // Smooth fade in
+            let vol = 0;
+            fadeIntervalRef.current = window.setInterval(() => {
+              vol = Math.min(TARGET_VOLUME, vol + 0.04);
+              audio.volume = vol;
+              if (vol >= TARGET_VOLUME) {
+                if (fadeIntervalRef.current) clearInterval(fadeIntervalRef.current);
+              }
+            }, 50);
+          })
+          .catch((err) => {
+            console.warn('Audio playback prevented:', err);
+            setIsPlaying(false);
+          });
+      }
+    }
+  };
 
   return (
     <button
       id="zen-audio-toggle"
       onClick={toggleSound}
-      title={isPlaying ? "Mute Zen Ambiance" : "Play Ambient Zen Sound"}
+      title={isPlaying ? "Mute Zen Ambiance (øneheart x reidenshi - snowfall)" : "Play Ambient Zen Sound (øneheart x reidenshi - snowfall)"}
       className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 transition-all duration-300 border ${
         isPlaying
-          ? 'bg-rose-950/60 border-rose-500/50 text-rose-300 glow-subtle'
+          ? 'bg-rose-950/60 border-rose-500/50 text-rose-300 shadow-[0_0_12px_rgba(244,63,94,0.25)]'
           : 'bg-black/40 border-white/10 text-neutral-400 hover:text-rose-300 hover:border-rose-500/30'
       }`}
     >
       {isPlaying ? (
         <>
+          <div className="flex items-center gap-0.5 mr-0.5">
+            <span className="w-0.5 h-2.5 bg-rose-400 rounded-full animate-[pulse_1s_ease-in-out_infinite]" />
+            <span className="w-0.5 h-3.5 bg-rose-400 rounded-full animate-[pulse_1.2s_ease-in-out_infinite_0.2s]" />
+            <span className="w-0.5 h-2 bg-rose-400 rounded-full animate-[pulse_0.9s_ease-in-out_infinite_0.4s]" />
+          </div>
           <Volume2 className="w-3.5 h-3.5 text-rose-400 animate-pulse" />
           <span className="hidden sm:inline">Zen Audio (On)</span>
         </>

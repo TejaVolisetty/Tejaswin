@@ -49,6 +49,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ onNavigate }) => {
     if (lname.includes('react')) return <Layers className="w-5 h-5 text-cyan-400" />;
     if (lname.includes('machine learning')) return <Brain className="w-5 h-5 text-pink-400" />;
     if (lname.includes('deep learning')) return <Activity className="w-5 h-5 text-purple-400" />;
+    if (lname.includes('prompt')) return <Sparkles className="w-5 h-5 text-rose-400" />;
     if (lname.includes('computer vision')) return <Eye className="w-5 h-5 text-rose-400" />;
     if (lname.includes('aws')) return <Cloud className="w-5 h-5 text-amber-500" />;
     if (lname.includes('docker')) return <Container className="w-5 h-5 text-blue-500" />;

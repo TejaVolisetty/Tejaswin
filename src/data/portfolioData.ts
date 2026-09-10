@@ -12,18 +12,18 @@ export const PERSONAL_INFO = {
   name: "Teja Swin Volisetty",
   shortName: "Teja Swin",
   role: "Computer Science Engineering Student",
-  focus: "AI, Software & Data Analysis",
+  focus: "AI, Prompt Engineering & Data Analysis",
   university: "B.Tech CSE KL University",
   location: "Vijayawada, Andhra Pradesh, India",
-  email: "tejaswin.volisetty@gmail.com",
+  email: "2300032713cseh2@gmail.com",
   phone: "+91 9121494695",
-  linkedin: "https://linkedin.com/in/volisetty-tejaswin",
+  linkedin: "https://www.linkedin.com/in/volisetty-tejaswin-204a88336/",
   github: "https://github.com/TejaVolisetty",
-  xTwitter: "https://twitter.com",
-  youtube: "https://youtube.com",
-  instagram: "https://instagram.com",
-  bio: "A Computer Science Engineering student passionate about AI, software, data analysis, and building solutions that create real-world impact.",
-  aboutLong: "I'm Teja Swin Volisetty, a Computer Science Engineering student passionate about AI, software, data analysis, and building solutions that create real-world impact. I believe in continuous learning, creative problem-solving, and using technology to make a better tomorrow."
+  xTwitter: "",
+  youtube: "",
+  instagram: "",
+  bio: "A Computer Science Engineering student passionate about AI, Prompt Engineering, software, data analysis, and building solutions that create real-world impact.",
+  aboutLong: "I'm Teja Swin Volisetty, a Computer Science Engineering student passionate about AI, Prompt Engineering, software, data analysis, and building solutions that create real-world impact. I believe in continuous learning, creative problem-solving, and using technology to make a better tomorrow."
 };
 
 // Generated backdrop images
@@ -44,6 +44,7 @@ export const TECHNICAL_SKILLS: SkillItem[] = [
   { name: "Excel (Pivot/XLOOKUP)", icon: "excel", color: "#107C41", category: "core" },
   { name: "Data Cleaning", icon: "filter", color: "#34D399", category: "core" },
   { name: "Statistical Analysis", icon: "chart", color: "#8B5CF6", category: "core" },
+  { name: "Prompt Engineering", icon: "sparkles", color: "#F43F5E", category: "ai" },
   { name: "Java", icon: "java", color: "#E76F00", category: "core" },
   { name: "JavaScript", icon: "javascript", color: "#F7DF1E", category: "core" },
   { name: "React", icon: "react", color: "#61DAFB", category: "core" },
@@ -69,16 +70,17 @@ export const SOFT_SKILLS = [
 ];
 
 export const SKILL_PROFICIENCY: ProficiencyItem[] = [
-  { name: "Python & SQL", percentage: 90 },
-  { name: "Data Analytics & Excel", percentage: 88 },
-  { name: "Data Cleaning & Validation", percentage: 88 },
-  { name: "Statistical Analysis", percentage: 85 },
-  { name: "Machine Learning", percentage: 85 },
-  { name: "Database Management", percentage: 84 },
-  { name: "Computer Vision", percentage: 80 },
-  { name: "Web Development", percentage: 82 },
-  { name: "AI Tools", percentage: 86 },
-  { name: "Cloud & DevOps", percentage: 75 },
+  { name: "Python & SQL", percentage: 70 },
+  { name: "Prompt Engineering", percentage: 68 },
+  { name: "Data Analytics & Excel", percentage: 68 },
+  { name: "Data Cleaning & Validation", percentage: 67 },
+  { name: "AI Tools", percentage: 66 },
+  { name: "Statistical Analysis", percentage: 65 },
+  { name: "Machine Learning", percentage: 64 },
+  { name: "Database Management", percentage: 62 },
+  { name: "Web Development", percentage: 60 },
+  { name: "Computer Vision", percentage: 58 },
+  { name: "Cloud & DevOps", percentage: 55 },
 ];
 
 export const TOOLS_I_USE: ToolItem[] = [

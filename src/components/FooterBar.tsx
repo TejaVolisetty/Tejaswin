@@ -1,7 +1,7 @@
 import React from 'react';
 import { SectionId } from '../types';
 import { PERSONAL_INFO } from '../data/portfolioData';
-import { Github, Linkedin, Twitter, Youtube, Instagram, Sparkles } from 'lucide-react';
+import { Github, Linkedin, Twitter, Youtube, Instagram, Sparkles, Mail } from 'lucide-react';
 
 interface FooterBarProps {
   activeSection: SectionId;
@@ -89,52 +89,65 @@ export const FooterBar: React.FC<FooterBarProps> = ({ activeSection, onNextSecti
 
       {/* Right side social links and author info */}
       <div className="flex items-center gap-4">
-        <div className="flex items-center gap-3">
-          <a
-            href={PERSONAL_INFO.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            title="GitHub"
-            className="text-neutral-400 hover:text-white transition-colors"
-          >
-            <Github className="w-4 h-4" />
-          </a>
+        <div className="flex items-center gap-2.5">
           <a
             href={PERSONAL_INFO.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            title="LinkedIn"
-            className="text-neutral-400 hover:text-sky-400 transition-colors"
+            title="VOLISETTY TEJASWIN | LinkedIn"
+            className="w-7 h-7 rounded-full bg-black/60 border border-white/10 hover:border-sky-400/60 hover:text-sky-400 hover:bg-sky-950/30 flex items-center justify-center text-neutral-400 transition-all"
           >
-            <Linkedin className="w-4 h-4" />
+            <Linkedin className="w-3.5 h-3.5" />
           </a>
           <a
-            href={PERSONAL_INFO.xTwitter}
+            href={PERSONAL_INFO.github}
             target="_blank"
             rel="noopener noreferrer"
-            title="X / Twitter"
-            className="text-neutral-400 hover:text-white transition-colors"
+            title="TejaVolisetty (TEJASWIN) | GitHub"
+            className="w-7 h-7 rounded-full bg-black/60 border border-white/10 hover:border-white/60 hover:text-white hover:bg-neutral-800 flex items-center justify-center text-neutral-400 transition-all"
           >
-            <Twitter className="w-4 h-4" />
+            <Github className="w-3.5 h-3.5" />
           </a>
           <a
-            href={PERSONAL_INFO.youtube}
-            target="_blank"
-            rel="noopener noreferrer"
-            title="YouTube"
-            className="text-neutral-400 hover:text-red-500 transition-colors"
+            href={`mailto:${PERSONAL_INFO.email}`}
+            title={`Email: ${PERSONAL_INFO.email}`}
+            className="w-7 h-7 rounded-full bg-black/60 border border-white/10 hover:border-rose-400/60 hover:text-rose-400 hover:bg-rose-950/30 flex items-center justify-center text-neutral-400 transition-all"
           >
-            <Youtube className="w-4 h-4" />
+            <Mail className="w-3.5 h-3.5" />
           </a>
-          <a
-            href={PERSONAL_INFO.instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Instagram"
-            className="text-neutral-400 hover:text-rose-400 transition-colors"
-          >
-            <Instagram className="w-4 h-4" />
-          </a>
+          {PERSONAL_INFO.xTwitter && (
+            <a
+              href={PERSONAL_INFO.xTwitter}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="X / Twitter"
+              className="w-7 h-7 rounded-full bg-black/60 border border-white/10 hover:border-white/60 hover:text-white flex items-center justify-center text-neutral-400 transition-all"
+            >
+              <Twitter className="w-3.5 h-3.5" />
+            </a>
+          )}
+          {PERSONAL_INFO.youtube && (
+            <a
+              href={PERSONAL_INFO.youtube}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="YouTube"
+              className="w-7 h-7 rounded-full bg-black/60 border border-white/10 hover:border-red-500/60 hover:text-red-500 flex items-center justify-center text-neutral-400 transition-all"
+            >
+              <Youtube className="w-3.5 h-3.5" />
+            </a>
+          )}
+          {PERSONAL_INFO.instagram && (
+            <a
+              href={PERSONAL_INFO.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Instagram"
+              className="w-7 h-7 rounded-full bg-black/60 border border-white/10 hover:border-rose-400/60 hover:text-rose-400 flex items-center justify-center text-neutral-400 transition-all"
+            >
+              <Instagram className="w-3.5 h-3.5" />
+            </a>
+          )}
         </div>
 
         <span className="text-neutral-600 hidden sm:inline">|</span>
