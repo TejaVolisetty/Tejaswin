@@ -59,20 +59,24 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onNavigate }) =>
     setIsSending(true);
 
     try {
-      const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(PERSONAL_INFO.email)}`, {
+      // Use activated FormSubmit endpoint token with clear labels
+      const formEndpoint = 'https://formsubmit.co/ajax/1ffb398bd0b7ee395ae49f6925871c95';
+      const res = await fetch(formEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
         body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          _subject: mailSubject,
-          subject: formData.subject,
-          message: formData.message,
+          _subject: `Portfolio Message from ${formData.name} [${formData.subject}]`,
           _replyto: formData.email,
-          _template: 'table',
+          _template: 'box',
+          _captcha: 'false',
+          'Sender Name': formData.name,
+          'Sender Email': formData.email,
+          'Subject / Topic': formData.subject,
+          'Message': formData.message,
+          'Received At': new Date().toLocaleString(),
         }),
       });
 
